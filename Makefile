@@ -12,7 +12,7 @@ all: $(NAME)
 
 %.o: %.c
 	@echo "Compiling dependancies ..."
-	$(CC) -Iincludes $(CFLAGS) -MMD -MP -c $< -o $@
+	@$(CC) -Iincludes $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(NAME): $(OBJECTS)
 	@$(CC) -Iincludes $(OBJECTS) $(LDFLAGS) -o $(NAME)

@@ -16,7 +16,7 @@ void	elf_header_init_32(struct elf_header_32 *ehdr32, struct elf_file *elf);
 void	elf_file_64_parse(struct elf_file *elf);
 void	elf_file_32_parse(struct elf_file *elf);
 int		elf_file_check_version(struct elf_file *elf);
-bool	elf_file_version_64(struct elf_file *elf, enum elf_version elf_version);
+bool	elf_file_version_64(struct elf_file *elf);
 
 int		elf_file_get_fd(struct elf_file *elf, char* file);
 void	elf_file_read_buffer(struct elf_file *elf);

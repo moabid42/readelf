@@ -23,8 +23,8 @@ int	elf_file_check_version(struct elf_file *elf) {
 	return (elf->ident[4]);
 }
 
-bool	elf_file_version_64(struct elf_file *elf, enum elf_version elf_version) {
-	int			version = elf_file_check_version(elf);
+bool	elf_file_version_64(struct elf_file *elf) {
+	int	version = elf_file_check_version(elf);
 	if (version == ELF_VERSION_64)
 		return (true);
 	else if (version == ELF_VERSION_32)

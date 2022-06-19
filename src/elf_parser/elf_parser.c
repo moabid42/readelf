@@ -7,11 +7,11 @@ char* SHSTRTAB; // addr of the section header string table
 char* STRTAB; // addr of the string table
 char* DYNSTR; //addr of the dynamic string table
 
-Elf32_Shdr* SYMTAB32; // the symbol table for ELF32
-Elf32_Shdr* DYNSYM32; // the dynamic symbol table for ELF32
+struct elf_sheader_32* SYMTAB32; // the symbol table for ELF32
+struct elf_sheader_32* DYNSYM32; // the dynamic symbol table for ELF32
 
-Elf64_Shdr* SYMTAB64; // the symbol table for ELF64
-Elf64_Shdr* DYNSYM64; // the dynamic symbol table for ELF64
+struct elf_sheader_64* SYMTAB64; // the symbol table for ELF64
+struct elf_sheader_64* DYNSYM64; // the dynamic symbol table for ELF64
 
 
 void usage(char* prog){
@@ -500,7 +500,7 @@ void parse_elf32(struct elf_header_32 hdr, struct elf_file *elf) {
  */
 void print_ephtbl32(struct elf_header_32 hdr){
     //Get the program header table
-    Elf32_Phdr* phdr = (Elf32_Phdr*) &add_ELF[hdr.e_phoff];
+    struct elf_pheader_32* phdr = (struct elf_pheader_32*) &add_ELF[hdr.e_phoff];
     
     puts("");
     puts("==========================================Program header table==========================================");
@@ -541,7 +541,7 @@ void print_ephtbl32(struct elf_header_32 hdr){
  */
 void print_eshtbl32(struct elf_header_32 hdr){
     //Get the section header table
-    Elf32_Shdr* shdr = (Elf32_Shdr*) &add_ELF[hdr.e_shoff];
+    struct elf_sheader_32* shdr = (struct elf_sheader_32*) &add_ELF[hdr.e_shoff];
     
     puts("");
     puts("===========================================Section header table===========================================");
@@ -586,7 +586,7 @@ void print_eshtbl32(struct elf_header_32 hdr){
  * This function prints all information contained
  * on an Elf32 symbol table
  */
-void print_esymtbl32(Elf32_Shdr* shdr, char* name){
+void print_esymtbl32(struct elf_sheader_32* shdr, char* name){
     
     if(!shdr){
         puts("");
@@ -595,7 +595,7 @@ void print_esymtbl32(Elf32_Shdr* shdr, char* name){
     }
 
     //Get the symbol table
-    Elf32_Sym* sym = (Elf32_Sym*) &add_ELF[shdr->sh_offset];
+    struct elf_sym_table_32* sym = (struct elf_sym_table_32*) &add_ELF[shdr->sh_offset];
     
     puts("");
     printf("==========================================%s table===========================================\n", name);
@@ -630,7 +630,7 @@ void print_esymtbl32(Elf32_Shdr* shdr, char* name){
 /*
  * This function prints a 32 bits program header
  */
-void print_ephdr32(Elf32_Phdr* phdr){
+void print_ephdr32(struct elf_pheader_32* phdr){
     int printed;
     puts("");
     printed = printf("%s", get_phtype(phdr->p_type));
@@ -648,7 +648,7 @@ void print_ephdr32(Elf32_Phdr* phdr){
 /*
  * This function prints a 32 bits section header
  */
-void print_eshdr32(Elf32_Shdr* shdr, int index){
+void print_eshdr32(struct elf_sheader_32* shdr, int index){
     int printed;
     puts("");
     printf("[%03d] ", index);
@@ -678,7 +678,7 @@ void print_eshdr32(Elf32_Shdr* shdr, int index){
             
 }
 
-void print_esym32(Elf32_Sym* sym, int index, char* name){
+void print_esym32(struct elf_sym_table_32* sym, int index, char* name){
     
     //set the apropriate string table
     char* strtab;
@@ -754,7 +754,7 @@ void print_ehdr64(struct elf_header_64 hdr){
  */
 void print_ephtbl64(struct elf_header_64 hdr){
     //Get the program header table
-    Elf64_Phdr* phdr = (Elf64_Phdr*) &add_ELF[hdr.e_phoff];
+    struct elf_pheader_64* phdr = (struct elf_pheader_64*) &add_ELF[hdr.e_phoff];
     
     puts("");
     puts("==========================================Program header table==========================================");
@@ -795,7 +795,7 @@ void print_ephtbl64(struct elf_header_64 hdr){
  */
 void print_eshtbl64(struct elf_header_64 hdr){
     //Get the section header table
-    Elf64_Shdr* shdr = (Elf64_Shdr*) &add_ELF[hdr.e_shoff]; 
+    struct elf_sheader_64* shdr = (struct elf_sheader_64*) &add_ELF[hdr.e_shoff]; 
     
     puts("");
     puts("===========================================Section header table===========================================");
@@ -840,7 +840,7 @@ void print_eshtbl64(struct elf_header_64 hdr){
  * This function prints all information contained
  * on an Elf64 symbol table
  */
-void print_esymtbl64(Elf64_Shdr* shdr, char* name){
+void print_esymtbl64(struct elf_sheader_64* shdr, char* name){
     
     if(!shdr){
         puts("");
@@ -849,7 +849,7 @@ void print_esymtbl64(Elf64_Shdr* shdr, char* name){
     }
 
     //Get the symbol table
-    Elf64_Sym* sym = (Elf64_Sym*) &add_ELF[shdr->sh_offset];
+    struct elf_sym_table_32* sym = (struct elf_sym_table_64*) &add_ELF[shdr->sh_offset];
     
     puts("");
     printf("==========================================%s table===========================================\n", name);
@@ -884,7 +884,7 @@ void print_esymtbl64(Elf64_Shdr* shdr, char* name){
 /*
  * This function prints a 64 bits program header
  */
-void print_ephdr64(Elf64_Phdr* phdr){
+void print_ephdr64(struct elf_pheader_64* phdr){
     int printed;
     puts("");
     printed = printf("%s", get_phtype(phdr->p_type));
@@ -903,7 +903,7 @@ void print_ephdr64(Elf64_Phdr* phdr){
 /*
  * This function prints a 64 bits section header
  */
-void print_eshdr64(Elf64_Shdr* shdr, int index){
+void print_eshdr64(struct elf_sheader_64* shdr, int index){
     int printed;
     puts("");
     printf("[%03d] ", index);
@@ -936,7 +936,7 @@ void print_eshdr64(Elf64_Shdr* shdr, int index){
 /*
  * This function prints a 64 bits symbol table index
  */
-void print_esym64(Elf64_Sym* sym, int index, char* name){
+void print_esym64(struct elf_sym_table_64* sym, int index, char* name){
     
     //set the apropriate string table
     char* strtab;

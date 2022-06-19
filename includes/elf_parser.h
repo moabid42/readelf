@@ -17,17 +17,11 @@ struct	elf_file {
 	unsigned char	ident[EI_NIDENT];
 };
 
-enum	elf_version {
-	ELF_VERSION_32 = 1,
-	ELF_VERSION_64 = 2
-};
-
-
 ///////////////////////////////
 //      Program Header       //
 ///////////////////////////////
 
-typedef struct {
+struct elf_pheader_32 {
     Word       p_type;
     Elf32_Off  p_offset;
     Elf32_Addr p_vaddr;
@@ -36,9 +30,9 @@ typedef struct {
     Word       p_memsz;
     Word       p_flags;
     Word       p_align;
-} Elf32_Phdr;
+};
 
-typedef struct {
+struct elf_pheader_64 {
     Word       p_type;
     Word       p_flags;
     Elf64_Off  p_offset;
@@ -47,13 +41,13 @@ typedef struct {
     uint64_t   p_filesz;
     uint64_t   p_memsz;
     uint64_t   p_align;
-} Elf64_Phdr;
+};
 
 ///////////////////////////////
 //    Section Header table   //
 ///////////////////////////////
 
-typedef struct {
+struct elf_sheader_32 {
     Word       sh_name;
     Word       sh_type;
     Word       sh_flags;
@@ -64,9 +58,9 @@ typedef struct {
     Word       sh_info;
     Word       sh_addralign;
     Word       sh_entsize;
-} Elf32_Shdr;
+};
 
-typedef struct {
+struct elf_sheader_64 {
     Word       sh_name;
     Word       sh_type;
     uint64_t   sh_flags;
@@ -77,29 +71,29 @@ typedef struct {
     Word       sh_info;
     uint64_t   sh_addralign;
     uint64_t   sh_entsize;
-} Elf64_Shdr;
+};
 
 ///////////////////////////////
 // Strings and symblos table //
 ///////////////////////////////
 
-typedef struct {
+struct elf_sym_table_32 {
     Word          st_name;
     Elf32_Addr    st_value;
     Word          st_size;
     unsigned char st_info;
     unsigned char st_other;
     HalfWord      st_shndx;
-} Elf32_Sym;
+};
 
-typedef struct {
+struct elf_sym_table_64 {
     Word          st_name;
     unsigned char st_info;
     unsigned char st_other;
     HalfWord      st_shndx;
     Elf64_Addr    st_value;
     uint64_t      st_size;
-} Elf64_Sym;
+};
 
 ///////////////////////////////
 //        Elf Header         //
@@ -185,10 +179,10 @@ void parse_elf32(struct elf_header_32 hdr, struct elf_file *elf);
 void print_ehdr32(struct elf_header_32 hdr);
 void print_ephtbl32(struct elf_header_32 hdr);
 void print_eshtbl32(struct elf_header_32 hdr);
-void print_esymtbl32(Elf32_Shdr* shdr, char* name);
-void print_ephdr32(Elf32_Phdr* phdr);
-void print_eshdr32(Elf32_Shdr* shdr, int index);
-void print_esym32(Elf32_Sym* sym, int index, char* name);
+void print_esymtbl32(struct elf_sheader_32* shdr, char* name);
+void print_ephdr32(struct elf_pheader_32* phdr);
+void print_eshdr32(struct elf_sheader_32* shdr, int index);
+void print_esym32(struct elf_sym_table_32* sym, int index, char* name);
 
 
 //Elf64 functions
@@ -196,10 +190,10 @@ void parse_elf64(struct elf_header_64 hdr, struct elf_file *elf);
 void print_ehdr64(struct elf_header_64 hdr);
 void print_ephtbl64(struct elf_header_64 hdr);
 void print_eshtbl64(struct elf_header_64 hdr);
-void print_esymtbl64(Elf64_Shdr* shdr, char* name);
-void print_ephdr64(Elf64_Phdr* phdr);
-void print_eshdr64(Elf64_Shdr* shdr, int index);
-void print_esym64(Elf64_Sym* sym, int index, char* name);
+void print_esymtbl64(struct elf_sheader_64* shdr, char* name);
+void print_ephdr64(struct elf_pheader_64* phdr);
+void print_eshdr64(struct elf_sheader_64* shdr, int index);
+void print_esym64(struct elf_sym_table_64* sym, int index, char* name);
 
 
 
