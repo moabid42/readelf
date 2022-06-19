@@ -1,40 +1,35 @@
-EXECUTABLE 	= elfparser
+NAME 		= elfparser
 
-SOURCES = $(shell find . -name "*.c")
-HEADERS = $(shell find . -name "*.h")
+SOURCES 	= $(shell find . -name "*.c")
+HEADERS 	= $(shell find . -name "*.h")
 
-OBJECTS = $(patsubst %.c, %.o, $(SOURCES))
-DEPENDS = $(patsubst %.c, %.d, $(SOURCES))
+OBJECTS 	= $(patsubst %.c, %.o, $(SOURCES))
+DEPENDS 	= $(patsubst %.c, %.d, $(SOURCES))
 
 CFLAGS = -g -Wall
-LDFLAGS =
 
-INC = -I ./includes
-
-all: $(EXECUTABLE)
+all: $(NAME)
 
 %.o: %.c
 	@echo "Compiling dependancies ..."
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) -Iincludes $(CFLAGS) -MMD -MP -c $< -o $@
 
-$(EXECUTABLE): $(OBJECTS)
-	@$(CC) $(INC) $(OBJECTS) $(LDFLAGS) -o $(EXECUTABLE)
+$(NAME): $(OBJECTS)
+	@$(CC) -Iincludes $(OBJECTS) $(LDFLAGS) -o $(NAME)
 	@echo "Compiled !"
 
-.phony: clean
 clean:
 	-@$(RM) $(OBJECTS) $(DEPENDS)
 	@echo "Everything is Cleaned !"
 
-.phony: fclean
 fclean: clean
-	-@$(RM) $(EXECUTABLE)
+	-@$(RM) $(NAME)
 
-.phony: run
 run: all
-	$(EXECUTABLE)
+	$(NAME)
 
-.phony: re
 re: clean all
+
+.PHONY: re run fclean clean all
 
 -include $(DEPENDS)
