@@ -1,16 +1,14 @@
 #ifndef ELF_MACROS_H
 # define ELF_MACROS_H
 
-#include "elf_parser.h"
 #include "elf.h"
+#include "elf_parser.h"
+#include "elf_utils.h"
 
 #define TRUE    1
 #define FALSE   0
 
 #define EI_NIDENT   16
-
-//version
-#define VERSION_I   4
 
 typedef uint16_t    HalfWord;
 typedef uint32_t	Word    ;
@@ -167,9 +165,9 @@ STV_PROTECTED   = 3                /* Not preemptible, not exported */
 #define ELF64_ST_BIND(val)                ELF32_ST_BIND (val)
 #define ELF64_ST_TYPE(val)                ELF32_ST_TYPE (val)
 
-#       define Elf64_Addr  uint64_t
-#       define Elf64_Off   uint64_t
-#       define Elf32_Addr  uint64_t
-#       define Elf32_Off   uint64_t
+#define Elf64_Addr  uint64_t
+#define Elf64_Off   uint64_t
+#define Elf32_Addr  uint64_t
+#define Elf32_Off   uint64_t
 
 #endif

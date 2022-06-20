@@ -1,6 +1,7 @@
 #include "elf.h"
 #include "elf_parser.h"
 #include "elf_macros.h"
+#include "elf_utils.h"
 
 int main(int argc, char* argv[]) {
 	struct elf_file	elf;

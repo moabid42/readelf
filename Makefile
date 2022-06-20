@@ -11,10 +11,10 @@ CFLAGS = -g -Wall
 all: $(NAME)
 
 %.o: %.c
-	@echo "Compiling dependancies ..."
 	@$(CC) -Iincludes $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(NAME): $(OBJECTS)
+	@echo "Dependencies Compiled !"
 	@$(CC) -Iincludes $(OBJECTS) $(LDFLAGS) -o $(NAME)
 	@echo "Compiled !"
 

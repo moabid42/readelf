@@ -1,6 +1,7 @@
-#include "../../includes/elf.h"
-#include "../../includes/elf_parser.h"
-#include "../../includes/elf_macros.h"
+#include "elf.h"
+#include "elf_parser.h"
+#include "elf_macros.h"
+#include "elf_utils.h"
 
 //////////////
 void	elf_file_64_parse(struct elf_file *elf) {

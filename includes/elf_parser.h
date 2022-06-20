@@ -1,16 +1,9 @@
 #ifndef ELF_PARSER
 #define ELF_PARSER
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include "elf_macros.h"
 #include "elf.h"
+#include "elf_macros.h"
+#include "elf_utils.h"
 
 struct	elf_file {
 	int 			fd;
@@ -133,36 +126,9 @@ struct elf_header_32{
 	HalfWord		e_shstrndx;
 };
 
-//Basic functions
-void usage(char* prog);
-void fatal(char* msg);
-int check_magic(unsigned char* ident);
-void space(int count);
-
-//main functions
-void	version_parser(unsigned char ident[], int elf);
-void	magical_parser(int elf);
-int	    open_file(int elf, char *file);
-void    version_parsing(unsigned char ident[], int elf, int bytes);
-
 /*
  * Getters
  */
-
-//ELF header
-char* get_hdata(unsigned char data);
-char* get_hversion(unsigned char version);
-char* get_hosabi(unsigned char osabi);
-char* get_htype(unsigned short type);
-char* get_hmachine(unsigned short machine);
-
-//Program header
-char* get_phtype(unsigned int type);
-char* get_phflags(unsigned int flags);
-
-//Section header
-char* get_shtype(unsigned int type);
-char* get_shflags(unsigned int flags);
 
 //Symbol table
 char* get_symtype32(unsigned char info);
@@ -171,8 +137,6 @@ char* get_symbind32(unsigned char info);
 char* get_symbind64(unsigned char info);
 char* get_symvis32(unsigned char other);
 char* get_symvis64(unsigned char other);
-
-
 
 //Elf32 functions
 void parse_elf32(struct elf_header_32 hdr, struct elf_file *elf);
