@@ -5,6 +5,11 @@
 
 struct elf_sheader_32* SYMTAB32; // the symbol table for ELF32
 struct elf_sheader_32* DYNSYM32; // the dynamic symbol table for ELF32
+char* add_ELF; // addr of the content of the ELF
+char* SHSTRTAB; // addr of the section header string table
+char* STRTAB; // addr of the string table
+char* DYNSTR; //addr of the dynamic string table
+
 
 /*
  * This function returns the corresponding symbol table
@@ -121,7 +126,7 @@ void parse_elf32(struct elf_header_32 hdr, struct elf_file *elf) {
     
     if(fstat(elf->fd, &elf_stat) < 0)
         fatal("[-] Can't get the file size");
-    add_ELF = mmap(NULL, elf_stat.st_size, PROT_READ, MAP_PRIVATE, elf, 0);
+    add_ELF = mmap(NULL, elf_stat.st_size, PROT_READ, MAP_PRIVATE, elf->fd, 0);
     if(add_ELF == MAP_FAILED)
         fatal("[-] Can't allocate memory for the file");
     

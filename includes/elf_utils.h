@@ -5,11 +5,6 @@
 #include "elf_parser.h"
 #include "elf_macros.h"
 
-char* add_ELF; // addr of the content of the ELF
-char* SHSTRTAB; // addr of the section header string table
-char* STRTAB; // addr of the string table
-char* DYNSTR; //addr of the dynamic string table
-
 // General_utils
 void usage(char* prog);
 void fatal(char* msg);

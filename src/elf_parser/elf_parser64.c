@@ -5,6 +5,10 @@
 
 struct elf_sheader_64* SYMTAB64; // the symbol table for ELF64
 struct elf_sheader_64* DYNSYM64; // the dynamic symbol table for ELF64
+char* add_ELF_64; // addr of the content of the ELF
+char* SHSTRTAB_64; // addr of the section header string table
+char* STRTAB_64; // addr of the string table
+char* DYNSTR_64; //addr of the dynamic string table
 
 /*
  * This function returns the corresponding symbol table
@@ -117,7 +121,7 @@ void print_ehdr64(struct elf_header_64 hdr){
  */
 void print_ephtbl64(struct elf_header_64 hdr){
     //Get the program header table
-    struct elf_pheader_64* phdr = (struct elf_pheader_64*) &add_ELF[hdr.e_phoff];
+    struct elf_pheader_64* phdr = (struct elf_pheader_64*) &add_ELF_64[hdr.e_phoff];
     
     puts("");
     puts("==========================================Program header table==========================================");
@@ -158,7 +162,7 @@ void print_ephtbl64(struct elf_header_64 hdr){
  */
 void print_eshtbl64(struct elf_header_64 hdr){
     //Get the section header table
-    struct elf_sheader_64* shdr = (struct elf_sheader_64*) &add_ELF[hdr.e_shoff]; 
+    struct elf_sheader_64* shdr = (struct elf_sheader_64*) &add_ELF_64[hdr.e_shoff]; 
     
     puts("");
     puts("===========================================Section header table===========================================");
@@ -186,7 +190,7 @@ void print_eshtbl64(struct elf_header_64 hdr){
     printf("Info\n");
     
     //Get the section header string table
-    SHSTRTAB = &add_ELF[shdr[hdr.e_shstrndx].sh_offset];
+    SHSTRTAB_64 = &add_ELF_64[shdr[hdr.e_shstrndx].sh_offset];
     
     //print each shdr
     for(int i=0; i < hdr.e_shnum; i++){
@@ -212,7 +216,7 @@ void print_esymtbl64(struct elf_sheader_64* shdr, char* name){
     }
 
     //Get the symbol table
-    struct elf_sym_table_32* sym = (struct elf_sym_table_64*) &add_ELF[shdr->sh_offset];
+    struct elf_sym_table_64* sym = (struct elf_sym_table_64*) &add_ELF_64[shdr->sh_offset];
     
     puts("");
     printf("==========================================%s table===========================================\n", name);
@@ -270,7 +274,7 @@ void print_eshdr64(struct elf_sheader_64* shdr, int index){
     int printed;
     puts("");
     printf("[%03d] ", index);
-    printed = printf("%s", &SHSTRTAB[shdr->sh_name]);
+    printed = printf("%s", &SHSTRTAB_64[shdr->sh_name]);
     space(20 - printed);
     printed = printf("%s", get_shtype(shdr->sh_type));
     space(14 - printed);
@@ -285,14 +289,14 @@ void print_eshdr64(struct elf_sheader_64* shdr, int index){
     printf("0x%x ", shdr->sh_info);
     puts("");
     
-    if(!strcmp(".symtab", &SHSTRTAB[shdr->sh_name]))
+    if(!strcmp(".symtab", &SHSTRTAB_64[shdr->sh_name]))
         SYMTAB64 = shdr;
-    else if(!strcmp(".dynsym", &SHSTRTAB[shdr->sh_name]))
+    else if(!strcmp(".dynsym", &SHSTRTAB_64[shdr->sh_name]))
         DYNSYM64 = shdr;
-    else if(!strcmp(".strtab", &SHSTRTAB[shdr->sh_name]))
-        STRTAB = &add_ELF[shdr->sh_offset];
-    else if(!strcmp(".dynstr", &SHSTRTAB[shdr->sh_name]))
-        DYNSTR = &add_ELF[shdr->sh_offset];
+    else if(!strcmp(".strtab", &SHSTRTAB_64[shdr->sh_name]))
+        STRTAB_64 = &add_ELF_64[shdr->sh_offset];
+    else if(!strcmp(".dynstr_64", &SHSTRTAB_64[shdr->sh_name]))
+        DYNSTR_64 = &add_ELF_64[shdr->sh_offset];
     
 }   
 
@@ -302,11 +306,11 @@ void print_eshdr64(struct elf_sheader_64* shdr, int index){
 void print_esym64(struct elf_sym_table_64* sym, int index, char* name){
     
     //set the apropriate string table
-    char* strtab;
+    char* strtab_64;
     if(!strcmp(".dynsym", name))
-        strtab = DYNSTR;
+        strtab_64 = DYNSTR_64;
     else
-        strtab = STRTAB;
+        strtab_64 = STRTAB_64;
 
     int printed;
     puts("");
@@ -320,7 +324,7 @@ void print_esym64(struct elf_sym_table_64* sym, int index, char* name){
     printed = printf("%s", get_symvis64(sym->st_other));
     space(10 - printed);
     printed = printf("%6d ", sym->st_shndx);
-    printf("%s", &strtab[sym->st_name]);    
+    printf("%s", &strtab_64[sym->st_name]);    
     puts("");
    
 }
@@ -336,8 +340,8 @@ void parse_elf64(struct elf_header_64 hdr, struct elf_file *elf){
 
     if(fstat(elf->fd, &elf_stat) < 0)
         fatal("[-] Can't get the file size");
-    add_ELF = mmap(NULL, elf_stat.st_size, PROT_READ, MAP_PRIVATE, elf->fd, 0);
-    if(add_ELF == MAP_FAILED)
+    add_ELF_64 = mmap(NULL, elf_stat.st_size, PROT_READ, MAP_PRIVATE, elf->fd, 0);
+    if(add_ELF_64 == MAP_FAILED)
         fatal("[-] Can't allocate memory for the file");
     
     print_ehdr64(hdr);

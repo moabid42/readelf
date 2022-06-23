@@ -32,6 +32,7 @@ bool	elf_file_version_64(struct elf_file *elf) {
 		return (false);
 	else
 		fatal("[-] ELF version not recognized");
+	return (false);
 }
 
 //////////////
@@ -51,7 +52,7 @@ void	elf_file_read_buffer(struct elf_file *elf) {
 //////////////
 bool	elf_file_create(struct elf_file *elf, char *file){
 	
-	elf->fd = elf_file_get_fd(&elf, file);
+	elf->fd = elf_file_get_fd(elf, file);
 	elf_file_read_buffer(elf);
 	return (true);
 }
